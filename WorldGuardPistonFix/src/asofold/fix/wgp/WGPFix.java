@@ -1,7 +1,6 @@
 package asofold.fix.wgp;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,21 +46,7 @@ public class WGPFix extends JavaPlugin {
 //	        description: For reloading settings
 //	        usage: wgpfix reload
 	
-	/**
-	 * API !
-	 * Register this and have the last word (unless others register too...) !
-	 * @author mc_dev
-	 *
-	 */
-	public interface WGPRegionChecker{
-		/**
-		 * 
-		 * @param sets List of ApplicableRegionSet instances, this is the non-empty ones. 
-		 * @param hasEmpty indicates that there are locations involved that do not hit a region (i.e. empty sets).
-		 * @return
-		 */
-		public boolean checkRegions(List<ApplicableRegionSet> sets, boolean hasEmpty);
-	}
+
 	class WGPFixBlockListener extends BlockListener {
 		WGPFix plugin;
 		long tsWG = 0;
@@ -233,7 +218,7 @@ public class WGPFix extends JavaPlugin {
 	}
 	
 	private final WGPFixBlockListener blockListener = new WGPFixBlockListener(this);
-	final static List<WGPRegionChecker> regionCheckers = new LinkedList<WGPFix.WGPRegionChecker>();
+	final static List<WGPRegionChecker> regionCheckers = new LinkedList<WGPRegionChecker>();
 	
 	@Override
 	public void onDisable() {
