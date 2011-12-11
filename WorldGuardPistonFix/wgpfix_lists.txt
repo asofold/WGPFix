@@ -1,0 +1,14 @@
+
+
+VERSION_HISTORY
+------------------------
+
+
+(1.1.0)
+- (add) interface registration for checking regions for otherwise ok piston-action (last word).
+- (add) API and configuration for monitor, prevent-nonsticky-retract, and wg set interval
+- (add) option: Disallow non-sticky pistons from retracting 
+- (add) pop-disallowed option
+
+(1.0.0)
+- (initial release)
