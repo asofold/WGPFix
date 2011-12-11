@@ -17,5 +17,5 @@ public interface WGPRegionChecker {
 	 * @param hasEmpty indicates that there are locations involved that do not hit a region (i.e. empty sets).
 	 * @return
 	 */
-	public boolean checkRegions(List<ApplicableRegionSet> sets, boolean hasEmpty);
+	public boolean checkRegions(String worldName, List<ApplicableRegionSet> sets, boolean hasEmpty);
 }

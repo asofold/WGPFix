@@ -164,8 +164,9 @@ public class WGPFix extends JavaPlugin {
 				
 			}
 			if (hasCheckers){
+				String worldName = refLoc.getWorld().getName();
 				for ( WGPRegionChecker checker : regionCheckers){
-					if ( !checker.checkRegions(applicableSets, hasEmpty)) return false;
+					if ( !checker.checkRegions(worldName, applicableSets, hasEmpty)) return false;
 				}
 			}
 			return true;
