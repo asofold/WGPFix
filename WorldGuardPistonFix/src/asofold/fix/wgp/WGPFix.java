@@ -54,7 +54,13 @@ public class WGPFix extends JavaPlugin {
 	 *
 	 */
 	public interface WGPRegionChecker{
-		public boolean checkRegions(List<ApplicableRegionSet> sets);
+		/**
+		 * 
+		 * @param sets List of ApplicableRegionSet instances, this is the non-empty ones. 
+		 * @param hasEmpty indicates that there are locations involved that do not hit a region (i.e. empty sets).
+		 * @return
+		 */
+		public boolean checkRegions(List<ApplicableRegionSet> sets, boolean hasEmpty);
 	}
 	class WGPFixBlockListener extends BlockListener {
 		WGPFix plugin;
@@ -146,6 +152,7 @@ public class WGPFix extends JavaPlugin {
 			RegionManager mg = this.getWorldGuard().getRegionManager(refLoc.getWorld());
 			ApplicableRegionSet set = mg.getApplicableRegions(refLoc);
 			boolean isRegion = set.size() != 0;
+			boolean hasEmpty = !isRegion;
 			// TODO: use some caching ?
 			Set<String> mustMatch = getUserSet(set);
 			int size = mustMatch.size();
@@ -153,26 +160,27 @@ public class WGPFix extends JavaPlugin {
 			List<ApplicableRegionSet> applicableSets  = null;
 			if ( hasCheckers){ 
 				applicableSets = new LinkedList<ApplicableRegionSet>();
-				applicableSets.add(set);
+				if (isRegion) applicableSets.add(set);
 			}
 			for ( Location loc : locs){
 				set = mg.getApplicableRegions(loc);
-				if (set==null){ // ok.
-				} else if (set.size()==0){ // ok.
+				if (set.size()==0){ // ok.
+					hasEmpty = true;
 				} else if ( isRegion ){
 					// compare owner sets:
 					Set<String> ref = getUserSet(set);
 					if ( size != ref.size() ) return false;
 					if ( !mustMatch.containsAll(ref)) return false;
+					if (hasCheckers) applicableSets.add(set);
 				} else {
 					// disallow from no region to unowned region !
 					return false; 
 				}
-				if (hasCheckers) applicableSets.add(set);
+				
 			}
 			if (hasCheckers){
 				for ( WGPRegionChecker checker : regionCheckers){
-					if ( !checker.checkRegions(applicableSets)) return false;
+					if ( !checker.checkRegions(applicableSets, hasEmpty)) return false;
 				}
 			}
 			return true;
