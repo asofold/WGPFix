@@ -1,3 +1,7 @@
 name: WGPFix
 main: asofold.fix.wgp.WGPFix
-version: 1.0.0
+version: 1.1.0
+commands:
+    wgpfix:
+        description: For reloading settings
+        usage: wgpfix reload

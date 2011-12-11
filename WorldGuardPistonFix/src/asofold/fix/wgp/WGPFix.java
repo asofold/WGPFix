@@ -196,7 +196,7 @@ public class WGPFix extends JavaPlugin {
 		@Override
 		public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 			if ( !label.equalsIgnoreCase("wgpfix")) return false;
-			if ( args.length == 0 ){
+			if ( args.length == 1 ){
 				if ( args[0].equalsIgnoreCase("reload")){
 					if ( blockListener.getWorldGuard().hasPermission(sender, "wgpfix.reload" )){
 						if (loadSettings())	sender.sendMessage("WGPFix - Settings reloaded.");
@@ -219,10 +219,11 @@ public class WGPFix extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		loadSettings();
+		getCommand("wgpfix").setExecutor(new WGPFixCommand());
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.BLOCK_PISTON_EXTEND, this.blockListener, Priority.Low, this);
 		pm.registerEvent(Event.Type.BLOCK_PISTON_RETRACT, this.blockListener, Priority.Low, this);
-		System.out.println("WorldGuardPistonFix (WGPFix) 1.0.0 enabled.");
+		System.out.println("WorldGuardPistonFix (WGPFix) "+getDescription().getVersion()+" enabled.");
 	}
 	
 	/**
