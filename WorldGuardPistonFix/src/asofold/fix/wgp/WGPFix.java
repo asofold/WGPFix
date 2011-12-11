@@ -53,8 +53,8 @@ public class WGPFix extends JavaPlugin {
 	 * @author mc_dev
 	 *
 	 */
-	public interface WGPChecker{
-		public boolean check(List<ApplicableRegionSet> sets);
+	public interface WGPRegionChecker{
+		public boolean checkRegions(List<ApplicableRegionSet> sets);
 	}
 	class WGPFixBlockListener extends BlockListener {
 		WGPFix plugin;
@@ -149,7 +149,7 @@ public class WGPFix extends JavaPlugin {
 			// TODO: use some caching ?
 			Set<String> mustMatch = getUserSet(set);
 			int size = mustMatch.size();
-			boolean hasCheckers = !checkers.isEmpty();
+			boolean hasCheckers = !regionCheckers.isEmpty();
 			List<ApplicableRegionSet> applicableSets  = null;
 			if ( hasCheckers){ 
 				applicableSets = new LinkedList<ApplicableRegionSet>();
@@ -171,8 +171,8 @@ public class WGPFix extends JavaPlugin {
 				if (hasCheckers) applicableSets.add(set);
 			}
 			if (hasCheckers){
-				for ( WGPChecker checker : checkers){
-					if ( !checker.check(applicableSets)) return false;
+				for ( WGPRegionChecker checker : regionCheckers){
+					if ( !checker.checkRegions(applicableSets)) return false;
 				}
 			}
 			return true;
@@ -225,7 +225,7 @@ public class WGPFix extends JavaPlugin {
 	}
 	
 	private final WGPFixBlockListener blockListener = new WGPFixBlockListener(this);
-	final static List<WGPChecker> checkers = new LinkedList<WGPFix.WGPChecker>();
+	final static List<WGPRegionChecker> regionCheckers = new LinkedList<WGPFix.WGPRegionChecker>();
 	
 	@Override
 	public void onDisable() {
@@ -318,8 +318,8 @@ public class WGPFix extends JavaPlugin {
 	 * API !
 	 * Register implementation that will check regions just before allowing piston-action.
 	 */
-	public static void addChecker( WGPChecker checker){
-		checkers.add(checker);
+	public static void addRegionChecker( WGPRegionChecker checker){
+		regionCheckers.add(checker);
 	}
 	
 	/**
@@ -327,8 +327,8 @@ public class WGPFix extends JavaPlugin {
 	 * Unregister implementation for checking regions affected by piston actions.
 	 * @param checker
 	 */
-	public static void removeChecker( WGPChecker checker){
-		checkers.remove(checker);
+	public static void removeRegionChecker( WGPRegionChecker checker){
+		regionCheckers.remove(checker);
 	}
 
 }
