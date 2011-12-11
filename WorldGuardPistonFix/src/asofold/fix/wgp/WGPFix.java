@@ -199,8 +199,14 @@ public class WGPFix extends JavaPlugin {
 			if ( args.length == 1 ){
 				if ( args[0].equalsIgnoreCase("reload")){
 					if ( blockListener.getWorldGuard().hasPermission(sender, "wgpfix.reload" )){
-						if (loadSettings())	sender.sendMessage("WGPFix - Settings reloaded.");
-						else sender.sendMessage("WGPFix - Failed to reload settings, fall back to paranoid settings.");
+						if (loadSettings()){
+							sender.sendMessage("WGPFix - Settings reloaded.");
+							return true;
+						}
+						else{
+							sender.sendMessage("WGPFix - Failed to reload settings, fall back to paranoid settings.");
+							return true; // just to prevent showing usage.
+						}
 					}
 				}
 			}
