@@ -32,11 +32,21 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 /**
  * TODO: deny-all if WG not present option.
- * TODO: pop-pistons option
+ * 
  * @author mc_dev
  *
  */
 public class WGPFix extends JavaPlugin {
+	
+// plugin.yml:
+//	name: WGPFix
+//	main: asofold.fix.wgp.WGPFix
+//	version: 1.1.0
+//	commands:
+//	    wgpfix:
+//	        description: For reloading settings
+//	        usage: wgpfix reload
+	
 	/**
 	 * API !
 	 * Register this and have the last word (unless others register too...) !
