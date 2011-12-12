@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,6 +19,9 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.event.server.ServerListener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -40,15 +44,13 @@ public class WGPFix extends JavaPlugin {
 // plugin.yml:
 //	name: WGPFix
 //	main: asofold.fix.wgp.WGPFix
-//	version: 1.1.0
+//	version: 1.1.1
 //	commands:
 //	    wgpfix:
 //	        description: For reloading settings
 //	        usage: wgpfix reload
-	
 
 	class WGPFixBlockListener extends BlockListener {
-		WGPFix plugin;
 		long tsWG = 0;
 		WorldGuardPlugin wg = null;
 		// config settings:
@@ -56,13 +58,6 @@ public class WGPFix extends JavaPlugin {
 		boolean monitorPistons = true;
 		boolean preventNonStickyRetract = false;
 		boolean popDisallowed = false;
-		
-		
-		public  WGPFixBlockListener(WGPFix plg) {
-			this.plugin = plg;
-			
-		}
-
 		@Override
 		public void onBlockPistonExtend(BlockPistonExtendEvent event) {
 			if ( !monitorPistons) return;
@@ -109,7 +104,7 @@ public class WGPFix extends JavaPlugin {
 			}
 		}
 
-		public void pop(Block pistonBlock, Block extensionBlock, boolean isSticky) {
+		void pop(Block pistonBlock, Block extensionBlock, boolean isSticky) {
 			int itemId = isSticky ? 29:33;
 			pistonBlock.setType(Material.AIR);
 			pistonBlock.getState().update();
@@ -120,21 +115,10 @@ public class WGPFix extends JavaPlugin {
 			pistonBlock.getWorld().dropItemNaturally(pistonBlock.getLocation(), new ItemStack(itemId));
 		}
 		
-		private void setWG() {
-			Plugin temp = plugin.getServer().getPluginManager().getPlugin("WorldGuard");
-			WorldGuardPlugin wg = (WorldGuardPlugin) temp;
-			this.wg = wg;
-			this.tsWG = System.currentTimeMillis();
-			// TODO: maybe get region managers already here
-		}
-		
-		public final WorldGuardPlugin getWorldGuard(){
-			if (System.currentTimeMillis()-this.tsWG > this.tsThreshold) this.setWG();
-			return this.wg;
-		}
-		
-		public boolean sameOwners(Location refLoc, List<Location> locs){
-			RegionManager mg = this.getWorldGuard().getRegionManager(refLoc.getWorld());
+		boolean sameOwners(Location refLoc, List<Location> locs){
+			WorldGuardPlugin wg = getWorldGuard();
+			if ( wg == null) return false; // security option.
+			RegionManager mg = wg.getRegionManager(refLoc.getWorld());
 			ApplicableRegionSet set = mg.getApplicableRegions(refLoc);
 			boolean isRegion = set.size() != 0;
 			boolean hasEmpty = !isRegion;
@@ -171,7 +155,7 @@ public class WGPFix extends JavaPlugin {
 			}
 			return true;
 		}
-		public Set<String> getUserSet(ApplicableRegionSet rs){
+		Set<String> getUserSet(ApplicableRegionSet rs){
 			Set<String> set = new HashSet<String>();
 			if ( rs != null ){
 				for ( ProtectedRegion region : rs){
@@ -193,6 +177,40 @@ public class WGPFix extends JavaPlugin {
 			}
 			
 			return set;
+		}
+		final boolean setWG() {
+			Plugin temp = Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
+			boolean ok = true;
+			if ( temp == null ) ok = false;
+			if ( !temp.isEnabled() ) ok = false;
+			if ( !ok){
+				resetWG();
+				return false;
+			} 
+			WorldGuardPlugin wg = (WorldGuardPlugin) temp;
+			this.wg = wg;
+			this.tsWG = System.currentTimeMillis();
+			// TODO: maybe get region managers already here
+			return true;
+		}
+		final WorldGuardPlugin getWorldGuard(){
+			if (System.currentTimeMillis()-this.tsWG > this.tsThreshold) this.setWG();
+			return this.wg;
+		}
+		final void resetWG(){
+			this.wg = null;
+			this.tsWG = 0;
+		}
+	}
+	
+	class WGPFixServerListener extends ServerListener{
+		@Override
+		public void onPluginDisable(PluginDisableEvent event) {
+			if ( event.getPlugin().getDescription().getName().equals("WorldGuard")) blockListener.resetWG();
+		}
+		@Override
+		public void onPluginEnable(PluginEnableEvent event) {
+			if ( event.getPlugin().getDescription().getName().equals("WorldGuard")) blockListener.setWG();
 		}
 	}
 	
@@ -218,11 +236,14 @@ public class WGPFix extends JavaPlugin {
 		}
 	}
 	
-	private final WGPFixBlockListener blockListener = new WGPFixBlockListener(this);
+	private final WGPFixBlockListener blockListener = new WGPFixBlockListener();
+	private final WGPFixServerListener serverListener = new WGPFixServerListener();
 	final static List<WGPRegionChecker> regionCheckers = new LinkedList<WGPRegionChecker>();
 	
 	@Override
 	public void onDisable() {
+		blockListener.monitorPistons = false;
+		blockListener.resetWG();
 		System.out.println("WorldGuardPistonFix (WGPFix) 1.0.0 disabled.");
 	}
 
@@ -231,8 +252,10 @@ public class WGPFix extends JavaPlugin {
 		loadSettings();
 		getCommand("wgpfix").setExecutor(new WGPFixCommand());
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvent(Event.Type.BLOCK_PISTON_EXTEND, this.blockListener, Priority.Low, this);
-		pm.registerEvent(Event.Type.BLOCK_PISTON_RETRACT, this.blockListener, Priority.Low, this);
+		pm.registerEvent(Event.Type.BLOCK_PISTON_EXTEND, blockListener, Priority.Low, this);
+		pm.registerEvent(Event.Type.BLOCK_PISTON_RETRACT, blockListener, Priority.Low, this);
+		pm.registerEvent(Event.Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, this);
+		pm.registerEvent(Event.Type.PLUGIN_ENABLE, serverListener, Priority.Monitor, this);
 		System.out.println("WorldGuardPistonFix (WGPFix) "+getDescription().getVersion()+" enabled.");
 	}
 	
@@ -289,6 +312,7 @@ public class WGPFix extends JavaPlugin {
 			this.setPreventNonStickyRetract(config.getBoolean("prevent-nonsticky-retract", false));
 			this.setWorldGuardSetInterval(config.getInt("set-worldguard-interval", 4000));
 			this.setPopDisallowed(config.getBoolean("pop-disallowed", false));
+			blockListener.setWG();
 			return true;
 		} catch (Throwable t){
 			getServer().getLogger().severe("WGPFix - Could not load configuration, continue wirh paranoid settings !");
@@ -306,6 +330,7 @@ public class WGPFix extends JavaPlugin {
 		this.setPreventNonStickyRetract(true);
 		this.setWorldGuardSetInterval(4000);
 		this.setPopDisallowed(true); // PARANOID !
+		blockListener.setWG();
 	}
 	
 	/**
