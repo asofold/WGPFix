@@ -8,24 +8,18 @@ VERSION_HISTORY
 - ? add fix for duping bug (... maybe rather not)
 
 (1.1.1)
-- (add) Better way to check / set WorldGuard
-- (add) Prevent any piston action if WorldGuard is not set (monitor-pistons must be true for that to take effect)
+- (add) Better way to check / set WorldGuard (keeping the 4 seconds minimum interval, though)
+- (add) Prevent any piston action if WorldGuard is not set or disabled (monitor-pistons must be true for that to take effect)
 - (bugfix, potential) Stop monitoring pistons officially, if the plugin is disabled (might mean no change if the events are not processed anyway)
-
-
-
 
 (1.1.0)
 - (add) pop-disallowed option: popping pistons out of the ground if disallowed (defaults to false).
 - (add) option: Disallow non-sticky pistons from retracting (defaults to false, which is faster)
 - (add) API and configuration for monitor, and wg set interval (default as 1.0.0 behaviour)
 - (add) command to reload the configuration: /wgpfix reload (permission: wgpfix.reload)
-- (add) static methods for interface registration for checking regions on otherwise ok piston-action ("last word").
 - (add) creates a default configuration, if none is present.
+- (add) static methods for interface registration for checking regions on otherwise ok piston-action ("last word").
 - (bugfix, potential) Set WorldGuard in onEnable.
-
-
-
 
 (1.0.0)
 - (initial release)

@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="C:/Dokumente und Einstellungen/mc_dev/Desktop/minecraft/BACKUPS/SERVER/current_plugin_versions/WorldGuard.jar"/>
 	<classpathentry kind="lib" path="C:/Dokumente und Einstellungen/mc_dev/Desktop/minecraft/BACKUPS/SERVER/current_plugin_versions/WorldEdit.jar"/>
-	<classpathentry kind="lib" path="C:/Dokumente und Einstellungen/mc_dev/Desktop/minecraft/BACKUPS/SERVER/bukkit-api/bukkit-1.0.0-R1-SNAPSHOT.jar" sourcepath="C:/Dokumente und Einstellungen/mc_dev/Desktop/minecraft/BACKUPS/SERVER/bukkit-api/bukkit-1.0.0-R1-SNAPSHOT.jar">
+	<classpathentry kind="lib" path="C:/Dokumente und Einstellungen/mc_dev/Desktop/minecraft/BACKUPS/SERVER/bukkit-api/bukkit.jar" sourcepath="C:/Dokumente und Einstellungen/mc_dev/Desktop/minecraft/BACKUPS/SERVER/bukkit-api/bukkit-1.0.0-R1-SNAPSHOT.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:file:/C:/Dokumente und Einstellungen/mc_dev/Desktop/minecraft/BACKUPS/SERVER/bukkit-api/bukkit-1.0.0-R1-SNAPSHOT.jar!/"/>
 		</attributes>
