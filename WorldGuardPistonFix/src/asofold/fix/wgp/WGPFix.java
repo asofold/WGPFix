@@ -34,21 +34,12 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 /**
- * TODO: deny-all if WG not present option.
+ * 
  * 
  * @author mc_dev
  *
  */
 public class WGPFix extends JavaPlugin {
-	
-// plugin.yml:
-//	name: WGPFix
-//	main: asofold.fix.wgp.WGPFix
-//	version: 1.1.1
-//	commands:
-//	    wgpfix:
-//	        description: For reloading settings
-//	        usage: wgpfix reload
 
 	class WGPFixBlockListener extends BlockListener {
 		long tsWG = 0;
@@ -112,7 +103,7 @@ public class WGPFix extends JavaPlugin {
 				extensionBlock.setType(Material.AIR);
 				extensionBlock.getState().update();
 			}
-			pistonBlock.getWorld().dropItemNaturally(pistonBlock.getLocation(), new ItemStack(itemId));
+			pistonBlock.getWorld().dropItemNaturally(pistonBlock.getLocation(), new ItemStack(itemId, 1));
 		}
 		
 		boolean sameOwners(Location refLoc, List<Location> locs){

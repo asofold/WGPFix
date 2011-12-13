@@ -7,6 +7,9 @@ VERSION_HISTORY
 - ? add halt command
 - ? add fix for duping bug (... maybe rather not)
 
+(1.1.2)
+- (bugfix) pop-pistons will drop an item stack of the size 1 now (not 0)
+
 (1.1.1)
 - (add) Better way to check / set WorldGuard (keeping the 4 seconds minimum interval, though)
 - (add) Prevent any piston action if WorldGuard is not set or disabled (monitor-pistons must be true for that to take effect)
