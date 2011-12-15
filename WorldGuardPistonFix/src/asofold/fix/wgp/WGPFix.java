@@ -235,7 +235,7 @@ public class WGPFix extends JavaPlugin {
 	public void onDisable() {
 		blockListener.monitorPistons = false;
 		blockListener.resetWG();
-		System.out.println("WorldGuardPistonFix (WGPFix) 1.0.0 disabled.");
+		System.out.println("WorldGuardPistonFix (WGPFix) "+getDescription().getVersion()+" disabled.");
 	}
 
 	@Override
