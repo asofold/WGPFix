@@ -3,6 +3,9 @@
 VERSION_HISTORY
 ------------------------
 
+(1.1.5)
+- (internals) Add softdepend for ,worldGuard, WorldEdit - jar export by jardesc. 
+
 (1.1.4)
 - (change) pop-disallowed: the item will now be dropped at the center of the block.
 - (change) ROLLBACK interface to state of 1.1.2
