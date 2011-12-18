@@ -9,6 +9,7 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
@@ -103,7 +104,11 @@ public class WGPFix extends JavaPlugin {
 				extensionBlock.setType(Material.AIR);
 				extensionBlock.getState().update();
 			}
-			pistonBlock.getWorld().dropItemNaturally(pistonBlock.getLocation(), new ItemStack(itemId, 1));
+			World world = pistonBlock.getWorld();
+			double x = .5 + pistonBlock.getX();
+			double y = .5 + pistonBlock.getY();
+			double z = .5 + pistonBlock.getZ();
+			world.dropItemNaturally(new Location(world,x,y,z), new ItemStack(itemId,1));
 		}
 		
 		boolean sameOwners(Location refLoc, List<Location> locs){
@@ -142,7 +147,7 @@ public class WGPFix extends JavaPlugin {
 				String worldName = refLoc.getWorld().getName();
 				for ( WGPRegionChecker checker : regionCheckers){
 					locs.add(refLoc);
-					if ( !checker.checkRegions(worldName, applicableSets, locs, hasEmpty)) return false;
+					if ( !checker.checkRegions(worldName, applicableSets, hasEmpty)) return false;
 				}
 			}
 			return true;

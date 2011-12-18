@@ -3,6 +3,10 @@
 VERSION_HISTORY
 ------------------------
 
+(1.1.4)
+- (change) pop-disallowed: the item will now be dropped at the center of the block.
+- (change) ROLLBACK interface to state of 1.1.2
+
 (1.1.3)
 - (bugfix) The correct version will now be shown on disabling the plugin.
 - (change) The interface for region checking was extended to use the locations as well.
