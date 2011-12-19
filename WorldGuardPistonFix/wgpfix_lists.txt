@@ -3,6 +3,9 @@
 VERSION_HISTORY
 ------------------------
 
+(1.1.6)
+- (internals) Refactored to use separate classes.
+
 (1.1.5)
 - (internals) Add softdepend for ,worldGuard, WorldEdit - jar export by jardesc. 
 
