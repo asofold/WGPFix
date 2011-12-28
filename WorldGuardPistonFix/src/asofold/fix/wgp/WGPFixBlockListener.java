@@ -24,7 +24,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class WGPFixBlockListener extends BlockListener {
-	private WGPFix plugin;
+	WGPFix plugin;
 	public WGPFixBlockListener(WGPFix plugin){
 		this.plugin = plugin;
 	}
@@ -106,7 +106,7 @@ public class WGPFixBlockListener extends BlockListener {
 		// TODO: use some caching ?
 		Set<String> mustMatch = getUserSet(set);
 		int size = mustMatch.size();
-		boolean hasCheckers = !plugin.regionCheckers.isEmpty();
+		boolean hasCheckers = !WGPFix.regionCheckers.isEmpty();
 		List<ApplicableRegionSet> applicableSets  = null;
 		if ( hasCheckers){ 
 			applicableSets = new LinkedList<ApplicableRegionSet>();
@@ -130,7 +130,7 @@ public class WGPFixBlockListener extends BlockListener {
 		}
 		if (hasCheckers){
 			String worldName = refLoc.getWorld().getName();
-			for ( WGPRegionChecker checker : plugin.regionCheckers){
+			for ( WGPRegionChecker checker : WGPFix.regionCheckers){
 				locs.add(refLoc);
 				if ( !checker.checkRegions(worldName, applicableSets, hasEmpty)) return false;
 			}

@@ -2,8 +2,6 @@ package asofold.fix.wgp;
 
 import java.util.List;
 
-import org.bukkit.Location;
-
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 
 /**

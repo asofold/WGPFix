@@ -1,7 +1,14 @@
+wgpfix_lists.txt
+--------------------------
 
+!!! CHECK CONFIGURATION USE (NON NULL RETUNR VALUES EVEN IF SET AS PRESET) !!!
 
 VERSION_HISTORY
 ------------------------
+
+*(1.2.0)
+- !(add) List of block-ids to prevent from being "pistoned" (!) 
+- (internals) Added compat layer for configuration.
 
 (1.1.6)
 - (internals) Refactored to use separate classes.

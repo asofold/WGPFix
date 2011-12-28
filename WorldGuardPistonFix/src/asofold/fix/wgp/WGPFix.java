@@ -1,38 +1,16 @@
 package asofold.fix.wgp;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
-import org.bukkit.event.block.BlockListener;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.server.PluginDisableEvent;
-import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.event.server.ServerListener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.domains.DefaultDomain;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import asofold.fix.wgp.compatlayer.CompatConfig;
+import asofold.fix.wgp.compatlayer.CompatConfigFactory;
 
 /**
  * 
@@ -103,7 +81,7 @@ public class WGPFix extends JavaPlugin {
 	public boolean loadSettings(){
 		File file = new File( getDataFolder(), "wgpfix.yml");
 		try{
-			org.bukkit.util.config.Configuration config = new org.bukkit.util.config.Configuration(file);
+			CompatConfig config = CompatConfigFactory.getConfig(file);
 			if (!file.exists()){
 				config.setProperty("monitor-pistons", true);
 				config.setProperty("prevent-nonsticky-retract", false);
