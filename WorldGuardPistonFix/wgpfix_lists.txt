@@ -6,8 +6,11 @@ wgpfix_lists.txt
 VERSION_HISTORY
 ------------------------
 
-*(1.2.0)
-- !(add) List of block-ids to prevent from being "pistoned" (!) 
+***
+- !(add) List of regions to exclude from checks (treat as not there)
+
+(1.2.0)
+- (add) List of block-ids to prevent from being "pistoned" , for all, sticky(!) 
 - (internals) Added compat layer for configuration.
 
 (1.1.6)

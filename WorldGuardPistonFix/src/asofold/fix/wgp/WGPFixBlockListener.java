@@ -35,6 +35,8 @@ public class WGPFixBlockListener extends BlockListener {
 	boolean monitorPistons = true;
 	boolean preventNonStickyRetract = false;
 	boolean popDisallowed = false;
+	public final Set<Integer> denySticky = new HashSet<Integer>();
+	public final Set<Integer> denyAll = new HashSet<Integer>();
 	@Override
 	public void onBlockPistonExtend(BlockPistonExtendEvent event) {
 		if ( !monitorPistons) return;
@@ -46,8 +48,19 @@ public class WGPFixBlockListener extends BlockListener {
 		BlockFace dir = event.getDirection();
 		locs.add(pistonBlock.getRelative(dir).getLocation());
 		int bSize = affectedBlocks.size();
+		boolean isSticky = event.isSticky();
 		if ( (affectedBlocks!=null) && (bSize>0) ){
 			for ( Block block : affectedBlocks){
+				int id = block.getTypeId();
+				if ( denyAll.contains(id)){
+					event.setCancelled(true);
+					if (popDisallowed) pop(pistonBlock, null, isSticky);
+					return;
+				} else if (isSticky && denySticky.contains(id)){
+					event.setCancelled(true);
+					if (popDisallowed) pop(pistonBlock, null, isSticky);
+					return;
+				}
 				locs.add(block.getLocation());
 			}
 			// add empty block at end
@@ -57,7 +70,7 @@ public class WGPFixBlockListener extends BlockListener {
 		Location pistonLoc = pistonBlock.getLocation();
 		if ( !sameOwners(pistonLoc, locs)){
 			event.setCancelled(true);
-			if (popDisallowed) pop(pistonBlock, null, event.isSticky());
+			if (popDisallowed) pop(pistonBlock, null, isSticky);
 		} 
 	}
 
@@ -65,18 +78,26 @@ public class WGPFixBlockListener extends BlockListener {
 	public void onBlockPistonRetract(BlockPistonRetractEvent event) {
 		if ( !monitorPistons) return;
 		if ( event.isCancelled()) return;
-		boolean check = event.isSticky() || preventNonStickyRetract;
+		boolean isSticky = event.isSticky() ;
+		boolean check = isSticky|| preventNonStickyRetract;
 		if (check){
 			Block pistonBlock = event.getBlock();
 			List<Location> affected = new LinkedList<Location>();
 			Location affectedLoc = event.getRetractLocation(); // pulled if sticky
-			if ( affectedLoc != null) affected.add(affectedLoc);
+			if ( isSticky && (affectedLoc != null)){
+				affected.add(affectedLoc);
+				if ( denySticky.contains(affectedLoc.getBlock().getTypeId())){
+					event.setCancelled(true);
+					if (popDisallowed) pop(pistonBlock, pistonBlock.getRelative(event.getDirection()), isSticky );
+					return;
+				}
+			}
 			// TODO: bug search
 			affected.add(pistonBlock.getRelative(event.getDirection()).getLocation()); // piston extension
 			Location pistonLoc = pistonBlock.getLocation();
 			if ( !sameOwners(pistonLoc, affected)){
 				event.setCancelled(true);	
-				if (popDisallowed) pop(pistonBlock, pistonBlock.getRelative(event.getDirection()), event.isSticky() );
+				if (popDisallowed) pop(pistonBlock, pistonBlock.getRelative(event.getDirection()), isSticky );
 			} 
 		}
 	}

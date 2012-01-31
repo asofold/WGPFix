@@ -80,6 +80,7 @@ public class WGPFix extends JavaPlugin {
 	 */
 	public boolean loadSettings(){
 		File file = new File( getDataFolder(), "wgpfix.yml");
+		blockListener.denySticky.clear();
 		try{
 			CompatConfig config = CompatConfigFactory.getConfig(file);
 			if (!file.exists()){
@@ -87,6 +88,8 @@ public class WGPFix extends JavaPlugin {
 				config.setProperty("prevent-nonsticky-retract", false);
 				config.setProperty("set-worldguard-interval", 4000);
 				config.setProperty("pop-disallowed", false);
+				config.setProperty("deny-blocks.sticky", new LinkedList<Integer>());
+				config.setProperty("deny-blocks.all", new LinkedList<Integer>());
 				config.save(); // ignore result
 			} else{
 				config.load();
@@ -95,6 +98,14 @@ public class WGPFix extends JavaPlugin {
 			this.setPreventNonStickyRetract(config.getBoolean("prevent-nonsticky-retract", false));
 			this.setWorldGuardSetInterval(config.getInt("set-worldguard-interval", 4000));
 			this.setPopDisallowed(config.getBoolean("pop-disallowed", false));
+			List<Integer> deny = config.getIntList("deny-blocks.sticky", null);
+			if ( deny != null){
+				blockListener.denySticky.addAll(deny);
+			}
+			deny = config.getIntList("deny-blocks.all", null);
+			if ( deny != null){
+				blockListener.denyAll.addAll(deny);
+			}
 			blockListener.setWG();
 			return true;
 		} catch (Throwable t){

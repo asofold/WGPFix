@@ -5,7 +5,7 @@ import java.util.List;
 
 
 /**
- * Some generic checks and stuff using getString(...) and hasentry(...) [later maybe getStringList....].
+ * Some generic checks and stuff using getString, hasEntry, getStringList, ...
  * @author mc_dev
  *
  */
@@ -16,7 +16,11 @@ public abstract class AbstractConfig implements CompatConfig {
 		String val = getString(path, null);
 		if ( val == null ) return defaultValue;
 		try{
-			return Boolean.parseBoolean(val);
+			// return Boolean.parseBoolean(val);
+			String t = val.trim().toLowerCase();
+			if ( t.equals("true")) return true;
+			else if ( t.equals("false")) return false;
+			else return defaultValue;
 		} catch( NumberFormatException exc){
 			return defaultValue;
 		}

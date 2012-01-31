@@ -4,7 +4,11 @@ package asofold.fix.wgp.compatlayer;
 import java.util.List;
 
 /**
- * CONVENTION: return strings if objects can be made strings.
+ * CONVENTIONS: 
+ * - Return strings if objects can be made strings.
+ * - No exceptions, rather leave elements out of lists.
+ * - Lists of length 0 and null can not always be distinguished (?->extra safe wrapper ?)
+ * - All contents are treated alike, even if given as a string (!): true and 'true', 1 and '1'
  * @author mc_dev
  *
  */
@@ -36,6 +40,12 @@ public interface CompatConfig {
 
 	public List<String> getStringList(String path, List<String> defaultValue);
 	
+	/**
+	 * Only accepts true and false , 'true' and 'false'.
+	 * @param path
+	 * @param defaultValue
+	 * @return
+	 */
 	public Boolean getBoolean(String path, Boolean defaultValue);
 	
 	public List<Integer> getIntList(String path, List<Integer> defaultValue);
