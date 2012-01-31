@@ -105,7 +105,9 @@ public class WGPFix extends JavaPlugin {
 			deny = config.getIntList("deny-blocks.all", null);
 			if ( deny != null){
 				blockListener.denyAll.addAll(deny);
+				blockListener.denySticky.addAll(deny);
 			}
+			
 			blockListener.setWG();
 			return true;
 		} catch (Throwable t){

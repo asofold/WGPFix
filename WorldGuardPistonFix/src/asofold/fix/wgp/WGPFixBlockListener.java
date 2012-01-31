@@ -35,6 +35,9 @@ public class WGPFixBlockListener extends BlockListener {
 	boolean monitorPistons = true;
 	boolean preventNonStickyRetract = false;
 	boolean popDisallowed = false;
+	/**
+	 * contains all from denAll as well.
+	 */
 	public final Set<Integer> denySticky = new HashSet<Integer>();
 	public final Set<Integer> denyAll = new HashSet<Integer>();
 	@Override
@@ -43,7 +46,6 @@ public class WGPFixBlockListener extends BlockListener {
 		if ( event.isCancelled()) return;
 		Block pistonBlock = event.getBlock();
 		List<Block> affectedBlocks = event.getBlocks();
-
 		List<Location> locs = new LinkedList<Location>();
 		BlockFace dir = event.getDirection();
 		locs.add(pistonBlock.getRelative(dir).getLocation());
@@ -52,11 +54,13 @@ public class WGPFixBlockListener extends BlockListener {
 		if ( (affectedBlocks!=null) && (bSize>0) ){
 			for ( Block block : affectedBlocks){
 				int id = block.getTypeId();
-				if ( denyAll.contains(id)){
-					event.setCancelled(true);
-					if (popDisallowed) pop(pistonBlock, null, isSticky);
-					return;
-				} else if (isSticky && denySticky.contains(id)){
+				if (isSticky ){
+					if ( denySticky.contains(id) ){
+						event.setCancelled(true);
+						if (popDisallowed) pop(pistonBlock, null, isSticky);
+						return;
+					}
+				} else if ( denyAll.contains(id)){
 					event.setCancelled(true);
 					if (popDisallowed) pop(pistonBlock, null, isSticky);
 					return;
