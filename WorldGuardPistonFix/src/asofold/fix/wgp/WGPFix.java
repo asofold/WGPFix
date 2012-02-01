@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.PluginManager;
@@ -144,6 +145,10 @@ public class WGPFix extends JavaPlugin {
 	 */
 	public static void removeRegionChecker( WGPRegionChecker checker){
 		regionCheckers.remove(checker);
+	}
+
+	public boolean hasPermission(CommandSender sender, String perm) {
+		return blockListener.getWorldGuard().hasPermission(sender, perm);
 	}
 
 }

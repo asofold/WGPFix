@@ -7,7 +7,12 @@ VERSION_HISTORY
 ------------------------
 
 ***
+- ?(add) flag for preventing ALL piston action (+hot command)
 - !(add) List of regions to exclude from checks (treat as not there)
+
+
+(1.2.1)
+- (bugfix) Access error (Command).
 
 (1.2.0)
 - (add) List of block-ids to prevent from being "pistoned" , for all, sticky(!) 

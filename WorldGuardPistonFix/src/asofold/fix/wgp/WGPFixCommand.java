@@ -14,7 +14,7 @@ public class WGPFixCommand implements CommandExecutor{
 		if ( !label.equalsIgnoreCase("wgpfix")) return false;
 		if ( args.length == 1 ){
 			if ( args[0].equalsIgnoreCase("reload")){
-				if ( plugin.blockListener.getWorldGuard().hasPermission(sender, "wgpfix.reload" )){
+				if ( plugin.hasPermission(sender, "wgpfix.reload" )){
 					if (plugin.loadSettings()){
 						sender.sendMessage("WGPFix - Settings reloaded.");
 						return true;
