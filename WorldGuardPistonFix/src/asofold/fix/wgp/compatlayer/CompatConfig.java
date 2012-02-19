@@ -31,6 +31,7 @@ public interface CompatConfig {
 	public List<String> getStringKeys(String path);
 	
 	public List<Object> getKeys(String path);
+	public List<Object> getKeys();
 
 	public Object getProperty(String path, Object defaultValue);
 

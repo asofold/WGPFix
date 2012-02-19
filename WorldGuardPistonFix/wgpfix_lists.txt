@@ -10,6 +10,9 @@ VERSION_HISTORY
 - ?(add) flag for preventing ALL piston action (+hot command)
 - !(add) List of regions to exclude from checks (treat as not there)
 
+(1.2.2)
+- (refactor) Switch to new event system.
+- (update) compatlayer 0.1.0
 
 (1.2.1)
 - (bugfix) Access error (Command).

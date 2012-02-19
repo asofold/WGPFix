@@ -1,19 +1,21 @@
 package asofold.fix.wgp;
 
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
-import org.bukkit.event.server.ServerListener;
 
-public class WGPFixServerListener extends ServerListener{
+public class WGPFixServerListener implements Listener{
 	private WGPFix plugin;
 	public WGPFixServerListener(WGPFix plugin){
 		this.plugin = plugin;
 	}
-	@Override
+	@EventHandler(priority=EventPriority.MONITOR)
 	public void onPluginDisable(PluginDisableEvent event) {
 		if ( event.getPlugin().getDescription().getName().equals("WorldGuard")) plugin.blockListener.resetWG();
 	}
-	@Override
+	@EventHandler(priority=EventPriority.MONITOR)
 	public void onPluginEnable(PluginEnableEvent event) {
 		if ( event.getPlugin().getDescription().getName().equals("WorldGuard")) plugin.blockListener.setWG();
 	}

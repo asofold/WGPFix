@@ -5,8 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -36,10 +34,8 @@ public class WGPFix extends JavaPlugin {
 		loadSettings();
 		getCommand("wgpfix").setExecutor(new WGPFixCommand(this));
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvent(Event.Type.BLOCK_PISTON_EXTEND, blockListener, Priority.Low, this);
-		pm.registerEvent(Event.Type.BLOCK_PISTON_RETRACT, blockListener, Priority.Low, this);
-		pm.registerEvent(Event.Type.PLUGIN_DISABLE, serverListener, Priority.Monitor, this);
-		pm.registerEvent(Event.Type.PLUGIN_ENABLE, serverListener, Priority.Monitor, this);
+		pm.registerEvents(blockListener, this);
+		pm.registerEvents(serverListener, this);
 		System.out.println("WorldGuardPistonFix (WGPFix) "+getDescription().getVersion()+" enabled.");
 	}
 	

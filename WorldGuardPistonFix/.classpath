@@ -9,5 +9,6 @@
 			<attribute name="javadoc_location" value="jar:file:/C:/Dokumente und Einstellungen/mc_dev/Desktop/minecraft/BACKUPS/SERVER/bukkit-api/bukkit-1.0.0-R1-SNAPSHOT.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/mc_dev/Desktop/minecraft/BACKUPS/SERVER/lib/oldbukkitconfig.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -11,7 +11,9 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.event.block.BlockListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -23,7 +25,7 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-public class WGPFixBlockListener extends BlockListener {
+public class WGPFixBlockListener implements Listener {
 	WGPFix plugin;
 	public WGPFixBlockListener(WGPFix plugin){
 		this.plugin = plugin;
@@ -40,7 +42,7 @@ public class WGPFixBlockListener extends BlockListener {
 	 */
 	public final Set<Integer> denySticky = new HashSet<Integer>();
 	public final Set<Integer> denyAll = new HashSet<Integer>();
-	@Override
+	@EventHandler(priority=EventPriority.LOW)
 	public void onBlockPistonExtend(BlockPistonExtendEvent event) {
 		if ( !monitorPistons) return;
 		if ( event.isCancelled()) return;
@@ -51,7 +53,7 @@ public class WGPFixBlockListener extends BlockListener {
 		locs.add(pistonBlock.getRelative(dir).getLocation());
 		int bSize = affectedBlocks.size();
 		boolean isSticky = event.isSticky();
-		if ( (affectedBlocks!=null) && (bSize>0) ){
+		if ( (affectedBlocks!=null) && (bSize>0) ){// TODO: remove null check or switch order with bSize
 			for ( Block block : affectedBlocks){
 				int id = block.getTypeId();
 				if (isSticky ){
@@ -78,7 +80,7 @@ public class WGPFixBlockListener extends BlockListener {
 		} 
 	}
 
-	@Override
+	@EventHandler(priority=EventPriority.LOW)
 	public void onBlockPistonRetract(BlockPistonRetractEvent event) {
 		if ( !monitorPistons) return;
 		if ( event.isCancelled()) return;
