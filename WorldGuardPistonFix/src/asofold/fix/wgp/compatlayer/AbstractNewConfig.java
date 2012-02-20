@@ -14,18 +14,18 @@ import org.bukkit.configuration.MemoryConfiguration;
 public abstract class AbstractNewConfig extends AbstractConfig {
 	File file = null;
 	MemoryConfiguration config = null;
+	
+
+	
 	public AbstractNewConfig(File file){
 		this.file = file;
 		this.config = new MemoryConfiguration();
 		setOptions(config);
 	}
 	
-	
-	
-	
 	@Override
 	public boolean hasEntry(String path) {
-		return config.contains(path);
+		return config.contains(path) || (config.get(path) != null);
 	}
 	
 	
@@ -126,12 +126,82 @@ public abstract class AbstractNewConfig extends AbstractConfig {
 		}
 		config = temp;
 	}
-	
+
+	@Override
+	public Boolean getBoolean(String path, Boolean defaultValue) {
+		if ( defaultValue == null) throw new IllegalArgumentException("null not suported as default value.");
+		if (!config.contains(path)) return defaultValue;
+		Boolean res = super.getBoolean(path, null);
+		if ( res == null ) res = config.getBoolean(path, defaultValue);
+		return res;
+	}
+
+
+
+
+	@Override
+	public Double getDouble(String path, Double defaultValue) {
+		if (!config.contains(path)) return defaultValue;
+		Double res = super.getDouble(path, null);
+		if ( res == null ) res = config.getDouble(path, ConfigUtil.canaryDouble);
+		if ( res == ConfigUtil.canaryDouble) return defaultValue;
+		return res;
+	}
+
+
+
+
+	@Override
+	public Long getLong(String path, Long defaultValue) {
+		if (!config.contains(path)) return defaultValue;
+		Long res = super.getLong(path, null);
+		if ( res == null ) res = config.getLong(path, ConfigUtil.canaryLong);
+		if ( res == ConfigUtil.canaryLong) return defaultValue;
+		return res;
+	}
+
+
+
+
+	@Override
+	public Integer getInt(String path, Integer defaultValue) {
+		if (!config.contains(path)) return defaultValue;
+		Integer res = super.getInt(path, null);
+		if ( res == null ) res = config.getInt(path, ConfigUtil.canaryInt);
+		if ( res == ConfigUtil.canaryInt) return defaultValue;
+		return res;
+	}
+
+
+
+
+	@Override
+	public List<Integer> getIntList(String path, List<Integer> defaultValue) {
+		// TODO Auto-generated method stub
+		return super.getIntList(path, defaultValue);
+	}
+
+
+
+
+	@Override
+	public List<Double> getDoubleList(String path, List<Double> defaultValue) {
+		// TODO Auto-generated method stub
+		return super.getDoubleList(path, defaultValue);
+	}
+
+
+	void addAll(Configuration source, Configuration target){
+		Map<String, Object> all = source.getValues(true);
+		for ( String path: all.keySet()){
+			target.set(path, source.get(path));
+		}
+	}
 
 	void setOptions(Configuration cfg){
 		ConfigurationOptions opt = cfg.options();
 		opt.pathSeparator('.');
-		opt.copyDefaults(true);
+		//opt.copyDefaults(true);
 	}
 
 }
