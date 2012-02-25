@@ -37,13 +37,29 @@ public class WGPFixBlockListener implements Listener {
 	boolean monitorPistons = true;
 	boolean preventNonStickyRetract = false;
 	boolean popDisallowed = false;
+	
+	
+	boolean panic = false;
+	
+	int maxBlocks = WGPFix.defaultMaxBlocks;
+	
 	/**
+	 * Deny block ids from being affected by sticky pistons.
 	 * contains all from denAll as well.
 	 */
 	public final Set<Integer> denySticky = new HashSet<Integer>();
+	/**
+	 * Deny block ids from being affected by any piston type.
+	 */
 	public final Set<Integer> denyAll = new HashSet<Integer>();
+	
+	
 	@EventHandler(priority=EventPriority.LOW)
 	public void onBlockPistonExtend(BlockPistonExtendEvent event) {
+		if ( panic){
+			event.setCancelled(true);
+			return;
+		}
 		if ( !monitorPistons) return;
 		if ( event.isCancelled()) return;
 		Block pistonBlock = event.getBlock();
@@ -51,9 +67,11 @@ public class WGPFixBlockListener implements Listener {
 		List<Location> locs = new LinkedList<Location>();
 		BlockFace dir = event.getDirection();
 		locs.add(pistonBlock.getRelative(dir).getLocation());
-		int bSize = affectedBlocks.size();
+		int bSize; 
+		if ( affectedBlocks == null ) bSize = 0; // TODO: remove if really redundant.
+		else bSize = affectedBlocks.size();
 		boolean isSticky = event.isSticky();
-		if ( (affectedBlocks!=null) && (bSize>0) ){// TODO: remove null check or switch order with bSize
+		if ( bSize>0 ){
 			for ( Block block : affectedBlocks){
 				int id = block.getTypeId();
 				if (isSticky ){
@@ -69,12 +87,29 @@ public class WGPFixBlockListener implements Listener {
 				}
 				locs.add(block.getLocation());
 			}
-			// add empty block at end
-			Block endBlock = pistonBlock.getRelative(dir,bSize+1 );
-			locs.add(endBlock.getLocation());
 		}
-		Location pistonLoc = pistonBlock.getLocation();
-		if ( !sameOwners(pistonLoc, locs)){
+		// add empty block at end
+		Block endBlock = pistonBlock.getRelative(dir,bSize+1 );
+		int id = endBlock.getTypeId();
+		if (isSticky ){ // TODO: get rid of code cloning.
+			if ( denySticky.contains(id) ){
+				event.setCancelled(true);
+				if (popDisallowed) pop(pistonBlock, null, isSticky);
+				return;
+			}
+		} else if ( denyAll.contains(id)){
+			event.setCancelled(true);
+			if (popDisallowed) pop(pistonBlock, null, isSticky);
+			return;
+		}
+		locs.add(endBlock.getLocation());
+		if (locs.size() >= maxBlocks ){ //  >= because the base is counted in
+			event.setCancelled(true);	
+			if (popDisallowed) pop(pistonBlock, null, isSticky );
+			return;
+		}
+		else 
+		if ( !sameOwners(pistonBlock.getLocation(), locs)){
 			event.setCancelled(true);
 			if (popDisallowed) pop(pistonBlock, null, isSticky);
 		} 
@@ -82,28 +117,40 @@ public class WGPFixBlockListener implements Listener {
 
 	@EventHandler(priority=EventPriority.LOW)
 	public void onBlockPistonRetract(BlockPistonRetractEvent event) {
+		if ( panic){
+			event.setCancelled(true);
+			return;
+		}
 		if ( !monitorPistons) return;
 		if ( event.isCancelled()) return;
 		boolean isSticky = event.isSticky() ;
 		boolean check = isSticky|| preventNonStickyRetract;
 		if (check){
+			BlockFace dir = event.getDirection();
 			Block pistonBlock = event.getBlock();
 			List<Location> affected = new LinkedList<Location>();
-			Location affectedLoc = event.getRetractLocation(); // pulled if sticky
-			if ( isSticky && (affectedLoc != null)){
-				affected.add(affectedLoc);
-				if ( denySticky.contains(affectedLoc.getBlock().getTypeId())){
+			Block extensionBlock = pistonBlock.getRelative(dir);
+			if ( isSticky){
+				Block affectedBlock = extensionBlock.getRelative(dir);
+				int id = affectedBlock.getTypeId();
+				if ( denySticky.contains(id)){
 					event.setCancelled(true);
-					if (popDisallowed) pop(pistonBlock, pistonBlock.getRelative(event.getDirection()), isSticky );
+					if (popDisallowed) pop(pistonBlock, pistonBlock.getRelative(dir), isSticky );
 					return;
 				}
+				else if ( id != 0 )	affected.add(affectedBlock.getLocation());
 			}
-			// TODO: bug search
-			affected.add(pistonBlock.getRelative(event.getDirection()).getLocation()); // piston extension
-			Location pistonLoc = pistonBlock.getLocation();
-			if ( !sameOwners(pistonLoc, affected)){
+			affected.add(extensionBlock.getLocation());
+			if (affected.size() >= maxBlocks ){ //  >= because the base is counted in
 				event.setCancelled(true);	
-				if (popDisallowed) pop(pistonBlock, pistonBlock.getRelative(event.getDirection()), isSticky );
+				if (popDisallowed) pop(pistonBlock, pistonBlock.getRelative(dir), isSticky );
+				return;
+			}
+			else 
+			if ( !sameOwners(pistonBlock.getLocation(), affected)){
+				event.setCancelled(true);	
+				if (popDisallowed) pop(pistonBlock, pistonBlock.getRelative(dir), isSticky );
+				return;
 			} 
 		}
 	}
@@ -164,6 +211,7 @@ public class WGPFixBlockListener implements Listener {
 		}
 		return true;
 	}
+	
 	Set<String> getUserSet(ApplicableRegionSet rs){
 		Set<String> set = new HashSet<String>();
 		if ( rs != null ){
@@ -187,6 +235,7 @@ public class WGPFixBlockListener implements Listener {
 		
 		return set;
 	}
+	
 	final boolean setWG() {
 		Plugin temp = Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
 		boolean ok = true;
