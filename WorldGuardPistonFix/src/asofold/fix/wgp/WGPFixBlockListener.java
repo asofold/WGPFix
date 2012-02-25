@@ -66,7 +66,8 @@ public class WGPFixBlockListener implements Listener {
 		List<Block> affectedBlocks = event.getBlocks();
 		List<Location> locs = new LinkedList<Location>();
 		BlockFace dir = event.getDirection();
-		locs.add(pistonBlock.getRelative(dir).getLocation());
+		Block extensionBlock = pistonBlock.getRelative(dir);
+		locs.add(extensionBlock.getLocation());
 		int bSize; 
 		if ( affectedBlocks == null ) bSize = 0; // TODO: remove if really redundant.
 		else bSize = affectedBlocks.size();
@@ -89,7 +90,12 @@ public class WGPFixBlockListener implements Listener {
 			}
 		}
 		// add empty block at end
-		Block endBlock = pistonBlock.getRelative(dir,bSize+1 );
+		Block endBlock;
+		if (bSize>0){
+			endBlock = pistonBlock.getRelative(dir, bSize+1);
+			locs.add(endBlock.getLocation());
+		}
+		else endBlock = extensionBlock;
 		int id = endBlock.getTypeId();
 		if (isSticky ){ // TODO: get rid of code cloning.
 			if ( denySticky.contains(id) ){
@@ -102,8 +108,7 @@ public class WGPFixBlockListener implements Listener {
 			if (popDisallowed) pop(pistonBlock, null, isSticky);
 			return;
 		}
-		locs.add(endBlock.getLocation());
-		if (locs.size() >= maxBlocks ){ //  >= because the base is counted in
+		if ( bSize + 2 > maxBlocks ){ //  >= because the base is counted in
 			event.setCancelled(true);	
 			if (popDisallowed) pop(pistonBlock, null, isSticky );
 			return;

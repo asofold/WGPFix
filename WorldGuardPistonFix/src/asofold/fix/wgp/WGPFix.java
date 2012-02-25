@@ -129,9 +129,9 @@ public class WGPFix extends JavaPlugin {
 	
 	/**
 	 * (API)
-	 * Set which blocks pistons are not allow to affect. Can be null.
-	 * @param denySticky No piston type can affect these.
-	 * @param denyAll Sticky pistons can not affect these.
+	 * Set which blocks pistons are not allow to affect. 
+	 * @param denySticky No sort of piston can affect these. May be null.
+	 * @param denyAll Sticky pistons can not affect these. May be null.
 	 */
 	public void setDeniedBlocks(Collection<Integer> denySticky, Collection<Integer> denyAll){
 		blockListener.denySticky.clear();
