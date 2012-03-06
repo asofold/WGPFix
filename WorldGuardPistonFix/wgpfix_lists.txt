@@ -13,6 +13,10 @@ VERSION_HISTORY
 - ! (internals) get rid of some code-cloning.
 ? Bug overlapping + containing region (same owners etc.)....
 
+
+(dummy entry to allow commit)
+
+
 (1.3.0)
 - (bugfix) Check the block-id of the end blocks as well (fixes: Pumpkins etc.).
 - (add) Commands: monitor (+unmonitor) (correspond to monitor-pistons). 
