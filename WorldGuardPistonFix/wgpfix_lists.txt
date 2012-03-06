@@ -1,7 +1,6 @@
 wgpfix_lists.txt
 --------------------------
 
-!!! CHECK CONFIGURATION USE (NON NULL RETUNR VALUES EVEN IF SET AS PRESET) !!!
 
 VERSION_HISTORY
 ------------------------
@@ -68,12 +67,3 @@ VERSION_HISTORY
 
 (1.0.0)
 - (initial release)
-
-
-#################################################################
-
-MAYBE PLANNED
----------------------
-
-- ? add halt command to stop all pistons (why ...)
-- ? add fix for duping bug (... maybe rather not)
