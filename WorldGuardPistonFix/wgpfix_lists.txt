@@ -14,7 +14,7 @@ VERSION_HISTORY
 ? Bug overlapping + containing region (same owners etc.)....
 
 
-(dummy entry to allow commit)
+(dummy entry to allow commit..)
 
 
 (1.3.0)
