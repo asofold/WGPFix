@@ -175,6 +175,13 @@ public class WGPFixBlockListener implements Listener {
 		world.dropItemNaturally(new Location(world,x,y,z), new ItemStack(itemId,1));
 	}
 	
+	/**
+	 * In case of registered region checkers this will query them and return false if they return false.
+	 * Furthermore this adds refLoc to locs in that case (!).
+	 * @param refLoc
+	 * @param locs
+	 * @return
+	 */
 	boolean sameOwners(Location refLoc, List<Location> locs){
 		WorldGuardPlugin wg = getWorldGuard();
 		if ( wg == null) return false; // security option.
