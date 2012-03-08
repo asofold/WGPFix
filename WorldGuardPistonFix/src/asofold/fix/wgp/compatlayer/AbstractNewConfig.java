@@ -129,10 +129,12 @@ public abstract class AbstractNewConfig extends AbstractConfig {
 
 	@Override
 	public Boolean getBoolean(String path, Boolean defaultValue) {
-		if ( defaultValue == null) throw new IllegalArgumentException("null not suported as default value.");
 		if (!config.contains(path)) return defaultValue;
 		Boolean res = super.getBoolean(path, null);
-		if ( res == null ) res = config.getBoolean(path, defaultValue);
+		if ( res == null ){
+			if ( defaultValue == null) defaultValue = false;
+			res = config.getBoolean(path, defaultValue);
+		}
 		return res;
 	}
 

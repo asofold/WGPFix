@@ -6,7 +6,7 @@ import com.avaje.ebean.EbeanServer;
 
 public class CompatConfigFactory {
 	
-	public static final String version = "0.1.0";
+	public static final String version = "0.1.1";
 	
 	/**
 	 * Attempt to get a working file configuration.
