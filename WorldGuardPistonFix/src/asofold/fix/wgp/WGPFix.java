@@ -19,7 +19,7 @@ import asofold.fix.wgp.compatlayer.CompatConfigFactory;
  *
  */
 public class WGPFix extends JavaPlugin {
-	final WGPFixBlockListener blockListener = new WGPFixBlockListener(this);
+	final WGPFixCoreListener blockListener = new WGPFixCoreListener(this);
 	final WGPFixServerListener serverListener = new WGPFixServerListener(this);
 	final static List<WGPRegionChecker> regionCheckers = new LinkedList<WGPRegionChecker>();
 	
@@ -107,6 +107,7 @@ public class WGPFix extends JavaPlugin {
 				config.setProperty("deny-blocks.all", new LinkedList<Integer>());
 				config.setProperty("panic", false);
 				config.setProperty("max-blocks", defaultMaxBlocks);
+				config.setProperty("monitor-structure-growth", false);
 				config.save(); // ignore result
 			} else{
 				config.load();
@@ -118,6 +119,7 @@ public class WGPFix extends JavaPlugin {
 			setPopDisallowed(config.getBoolean("pop-disallowed", false));
 			setMaxBlocks(config.getInt("max-blocks", defaultMaxBlocks));
 			setDeniedBlocks(config.getIntList("deny-blocks.sticky", null), config.getIntList("deny-blocks.all", null));
+			setMonitorStructureGrowth(config.getBoolean("monitor-structure-growth", false));
 			blockListener.setWG();
 			return true;
 		} catch (Throwable t){
@@ -127,6 +129,16 @@ public class WGPFix extends JavaPlugin {
 		}
 	}
 	
+	
+	/**
+	 * API
+	 * Set to true to prevent trees and huge mushrooms growing over region borders with differing owners/members.
+	 * @param boolean1
+	 */
+	public void setMonitorStructureGrowth(boolean monitor) {
+		blockListener.monitorStructureGrowth = monitor;
+	}
+
 	/**
 	 * (API)
 	 * Set which blocks pistons are not allow to affect. 
