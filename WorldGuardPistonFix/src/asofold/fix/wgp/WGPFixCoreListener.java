@@ -56,7 +56,7 @@ public class WGPFixCoreListener implements Listener {
 	
 	
 	@EventHandler(priority=EventPriority.LOW)
-	public final void onBlockPistonExtend(final BlockPistonExtendEvent event) {
+	final void onBlockPistonExtend(final BlockPistonExtendEvent event) {
 		if ( panic){
 			event.setCancelled(true);
 			return;
@@ -122,7 +122,7 @@ public class WGPFixCoreListener implements Listener {
 	}
 
 	@EventHandler(priority=EventPriority.LOW)
-	public final void onBlockPistonRetract(final BlockPistonRetractEvent event) {
+	final void onBlockPistonRetract(final BlockPistonRetractEvent event) {
 		if ( panic){
 			event.setCancelled(true);
 			return;
@@ -130,7 +130,6 @@ public class WGPFixCoreListener implements Listener {
 		if ( !monitorPistons) return;
 		if ( event.isCancelled()) return;
 		final boolean isSticky = event.isSticky() ;
-		final boolean check = ;
 		if (!(isSticky|| preventNonStickyRetract)) return;
 		final BlockFace dir = event.getDirection();
 		final Block pistonBlock = event.getBlock();
