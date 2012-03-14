@@ -14,7 +14,7 @@ VERSION_HISTORY
 ? Bug overlapping + containing region (same owners etc.)....
 
 (0.1.4)
-- !(add) Special feature: Monitor structure growth as well, in the same way as piston use.
+- (add) Special feature: Monitor structure growth as well, in the same way as piston use [Trees, huge mushrooms].
 
 [(0.1.3) -> on github]
 

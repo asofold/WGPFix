@@ -11,11 +11,13 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
@@ -159,6 +161,24 @@ public class WGPFixCoreListener implements Listener {
 		} 
 	}
 	
+	@EventHandler(priority=EventPriority.LOW)
+	final void onStructureGrow(StructureGrowEvent event){
+		if ( event.isCancelled()) return;
+		if (!monitorStructureGrowth) return;
+		final List<Location> affected = new LinkedList<Location>();
+		for ( BlockState state : event.getBlocks()){
+			affected.add(state.getLocation());
+		}
+		Location loc = event.getLocation();
+		if ( loc == null){
+			// compatibility check (i do not know what else might be grown later on and how).
+			if ( affected.isEmpty()) return;
+			else loc = affected.remove(0);
+			if ( affected.isEmpty()) return;
+		}
+		if (!sameOwners(loc, affected)) event.setCancelled(true);
+	}
+	
 
 	void pop(Block pistonBlock, Block extensionBlock, boolean isSticky) {
 		int itemId = isSticky ? 29:33;
@@ -182,17 +202,17 @@ public class WGPFixCoreListener implements Listener {
 	 * @param locs
 	 * @return
 	 */
-	boolean sameOwners(Location refLoc, List<Location> locs){
-		WorldGuardPlugin wg = getWorldGuard();
+	final boolean sameOwners(final Location refLoc, final List<Location> locs){
+		final WorldGuardPlugin wg = getWorldGuard();
 		if ( wg == null) return false; // security option.
-		RegionManager mg = wg.getRegionManager(refLoc.getWorld());
+		final RegionManager mg = wg.getRegionManager(refLoc.getWorld());
 		ApplicableRegionSet set = mg.getApplicableRegions(refLoc);
-		boolean isRegion = set.size() != 0;
+		final boolean isRegion = set.size() != 0;
 		boolean hasEmpty = !isRegion;
 		// TODO: use some caching ?
-		Set<String> mustMatch = getUserSet(set);
-		int size = mustMatch.size();
-		boolean hasCheckers = !WGPFix.regionCheckers.isEmpty();
+		final Set<String> mustMatch = getUserSet(set);
+		final int size = mustMatch.size();
+		final boolean hasCheckers = !WGPFix.regionCheckers.isEmpty();
 		List<ApplicableRegionSet> applicableSets  = null;
 		if ( hasCheckers){ 
 			applicableSets = new LinkedList<ApplicableRegionSet>();
@@ -204,7 +224,7 @@ public class WGPFixCoreListener implements Listener {
 				hasEmpty = true;
 			} else if ( isRegion ){
 				// compare owner sets:
-				Set<String> ref = getUserSet(set);
+				final Set<String> ref = getUserSet(set);
 				if ( size != ref.size() ) return false;
 				if ( !mustMatch.containsAll(ref)) return false;
 				if (hasCheckers) applicableSets.add(set);
@@ -215,7 +235,7 @@ public class WGPFixCoreListener implements Listener {
 			
 		}
 		if (hasCheckers){
-			String worldName = refLoc.getWorld().getName();
+			final String worldName = refLoc.getWorld().getName();
 			for ( WGPRegionChecker checker : WGPFix.regionCheckers){
 				locs.add(refLoc);
 				if ( !checker.checkRegions(worldName, applicableSets, hasEmpty)) return false;
@@ -224,8 +244,8 @@ public class WGPFixCoreListener implements Listener {
 		return true;
 	}
 	
-	Set<String> getUserSet(ApplicableRegionSet rs){
-		Set<String> set = new HashSet<String>();
+	private final static Set<String> getUserSet(final ApplicableRegionSet rs){
+		final Set<String> set = new HashSet<String>();
 		if ( rs != null ){
 			for ( ProtectedRegion region : rs){
 				DefaultDomain dom = region.getOwners();
