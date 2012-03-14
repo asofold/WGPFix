@@ -56,26 +56,26 @@ public class WGPFixCoreListener implements Listener {
 	
 	
 	@EventHandler(priority=EventPriority.LOW)
-	public void onBlockPistonExtend(BlockPistonExtendEvent event) {
+	public final void onBlockPistonExtend(final BlockPistonExtendEvent event) {
 		if ( panic){
 			event.setCancelled(true);
 			return;
 		}
 		if ( !monitorPistons) return;
 		if ( event.isCancelled()) return;
-		Block pistonBlock = event.getBlock();
-		List<Block> affectedBlocks = event.getBlocks();
-		List<Location> locs = new LinkedList<Location>();
-		BlockFace dir = event.getDirection();
-		Block extensionBlock = pistonBlock.getRelative(dir);
+		final Block pistonBlock = event.getBlock();
+		final List<Block> affectedBlocks = event.getBlocks();
+		final List<Location> locs = new LinkedList<Location>();
+		final BlockFace dir = event.getDirection();
+		final Block extensionBlock = pistonBlock.getRelative(dir);
 		locs.add(extensionBlock.getLocation());
-		int bSize; 
+		final int bSize; 
 		if ( affectedBlocks == null ) bSize = 0; // TODO: remove if really redundant.
 		else bSize = affectedBlocks.size();
-		boolean isSticky = event.isSticky();
+		final boolean isSticky = event.isSticky();
 		if ( bSize>0 ){
 			for ( Block block : affectedBlocks){
-				int id = block.getTypeId();
+				final int id = block.getTypeId();
 				if (isSticky ){
 					if ( denySticky.contains(id) ){
 						event.setCancelled(true);
@@ -91,13 +91,13 @@ public class WGPFixCoreListener implements Listener {
 			}
 		}
 		// add empty block at end
-		Block endBlock;
+		final Block endBlock;
 		if (bSize>0){
 			endBlock = pistonBlock.getRelative(dir, bSize+1);
 			locs.add(endBlock.getLocation());
 		}
 		else endBlock = extensionBlock;
-		int id = endBlock.getTypeId();
+		final int id = endBlock.getTypeId();
 		if (isSticky ){ // TODO: get rid of code cloning.
 			if ( denySticky.contains(id) ){
 				event.setCancelled(true);
@@ -122,44 +122,44 @@ public class WGPFixCoreListener implements Listener {
 	}
 
 	@EventHandler(priority=EventPriority.LOW)
-	public void onBlockPistonRetract(BlockPistonRetractEvent event) {
+	public final void onBlockPistonRetract(final BlockPistonRetractEvent event) {
 		if ( panic){
 			event.setCancelled(true);
 			return;
 		}
 		if ( !monitorPistons) return;
 		if ( event.isCancelled()) return;
-		boolean isSticky = event.isSticky() ;
-		boolean check = isSticky|| preventNonStickyRetract;
-		if (check){
-			BlockFace dir = event.getDirection();
-			Block pistonBlock = event.getBlock();
-			List<Location> affected = new LinkedList<Location>();
-			Block extensionBlock = pistonBlock.getRelative(dir);
-			if ( isSticky){
-				Block affectedBlock = extensionBlock.getRelative(dir);
-				int id = affectedBlock.getTypeId();
-				if ( denySticky.contains(id)){
-					event.setCancelled(true);
-					if (popDisallowed) pop(pistonBlock, pistonBlock.getRelative(dir), isSticky );
-					return;
-				}
-				else if ( id != 0 )	affected.add(affectedBlock.getLocation());
-			}
-			affected.add(extensionBlock.getLocation());
-			if (affected.size() >= maxBlocks ){ //  >= because the base is counted in
-				event.setCancelled(true);	
+		final boolean isSticky = event.isSticky() ;
+		final boolean check = ;
+		if (!(isSticky|| preventNonStickyRetract)) return;
+		final BlockFace dir = event.getDirection();
+		final Block pistonBlock = event.getBlock();
+		final List<Location> affected = new LinkedList<Location>();
+		final Block extensionBlock = pistonBlock.getRelative(dir);
+		if ( isSticky){
+			final Block affectedBlock = extensionBlock.getRelative(dir);
+			final int id = affectedBlock.getTypeId();
+			if ( denySticky.contains(id)){
+				event.setCancelled(true);
 				if (popDisallowed) pop(pistonBlock, pistonBlock.getRelative(dir), isSticky );
 				return;
 			}
-			else 
-			if ( !sameOwners(pistonBlock.getLocation(), affected)){
-				event.setCancelled(true);	
-				if (popDisallowed) pop(pistonBlock, pistonBlock.getRelative(dir), isSticky );
-				return;
-			} 
+			else if ( id != 0 )	affected.add(affectedBlock.getLocation());
 		}
+		affected.add(extensionBlock.getLocation());
+		if (affected.size() >= maxBlocks ){ //  >= because the base is counted in
+			event.setCancelled(true);	
+			if (popDisallowed) pop(pistonBlock, pistonBlock.getRelative(dir), isSticky );
+			return;
+		}
+		else 
+		if ( !sameOwners(pistonBlock.getLocation(), affected)){
+			event.setCancelled(true);	
+			if (popDisallowed) pop(pistonBlock, pistonBlock.getRelative(dir), isSticky );
+			return;
+		} 
 	}
+	
 
 	void pop(Block pistonBlock, Block extensionBlock, boolean isSticky) {
 		int itemId = isSticky ? 29:33;
