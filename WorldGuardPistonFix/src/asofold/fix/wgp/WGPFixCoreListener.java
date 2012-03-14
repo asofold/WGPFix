@@ -25,9 +25,9 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-public class WGPFixBlockListener implements Listener {
+public class WGPFixCoreListener implements Listener {
 	WGPFix plugin;
-	public WGPFixBlockListener(WGPFix plugin){
+	public WGPFixCoreListener(WGPFix plugin){
 		this.plugin = plugin;
 	}
 	long tsWG = 0;
@@ -37,6 +37,7 @@ public class WGPFixBlockListener implements Listener {
 	boolean monitorPistons = true;
 	boolean preventNonStickyRetract = false;
 	boolean popDisallowed = false;
+	boolean monitorStructureGrowth = false;
 	
 	
 	boolean panic = false;
