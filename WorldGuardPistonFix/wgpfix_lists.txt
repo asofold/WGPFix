@@ -2,7 +2,7 @@ wgpfix_lists.txt
 --------------------------
 
 
-VERSION_HISTORY
+PLANNING
 ------------------------
 
 - ?(add) List of regions to exclude from checks (treat as not there)
@@ -12,6 +12,18 @@ VERSION_HISTORY
 ? (add) optimizations: array for block ids, whitelist/blacklist switch, location cache (+regions, +owner sets, .... ?can use piston?) ?
 - ! (internals) get rid of some code-cloning.
 ? Bug overlapping + containing region (same owners etc.)....
+
+- ?(add) Scrambling of locations for structure growth + heuristic of location for bone meal?: for quick return!
+- ?(add) A hash table for ok to move pistons? (or map: piston->length of affected list) to allow quicker return ?
+
+- !(add) Better commands / effect of commands (both for structure and for pistons, panic = disable all, wgpfix deny pistons)
+
+
+CHANGELOG
+-------------------------------------
+
+(1.4.1)
+- (bugfix) in setWG: NullPointerException if WorldGuard is not present.
 
 (1.4.0)
 - (add) Special feature: Monitor structure growth as well, in the same way as piston use [Trees, huge mushrooms].
