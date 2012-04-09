@@ -23,6 +23,7 @@ CHANGELOG
 -------------------------------------
 
 (1.4.1)
+- (add) Print out the stack trace for exceptions on reloading.
 - (bugfix) in setWG: NullPointerException if WorldGuard is not present.
 
 (1.4.0)
