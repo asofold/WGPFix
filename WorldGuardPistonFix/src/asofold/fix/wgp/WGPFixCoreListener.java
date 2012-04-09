@@ -272,7 +272,7 @@ public class WGPFixCoreListener implements Listener {
 		Plugin temp = Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
 		boolean ok = true;
 		if ( temp == null ) ok = false;
-		if ( !temp.isEnabled() ) ok = false;
+		else if ( !temp.isEnabled() ) ok = false;
 		if ( !ok){
 			resetWG();
 			return false;
