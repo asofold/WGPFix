@@ -123,7 +123,8 @@ public class WGPFix extends JavaPlugin {
 			blockListener.setWG();
 			return true;
 		} catch (Throwable t){
-			getServer().getLogger().severe("[WGPFix] Could not load configuration, set to PANIC - all piston action will be prevented !");
+			getServer().getLogger().severe("[WGPFix] Could not load configuration, set to PANIC - all piston action will be prevented ! Error: "+t.getMessage());
+			t.printStackTrace();
 			setParanoid();
 			return false;
 		}
