@@ -16,6 +16,8 @@ PLANNING
 - ?(add) Scrambling of locations for structure growth + heuristic of location for bone meal?: for quick return!
 - ?(add) A hash table for ok to move pistons? (or map: piston->length of affected list) to allow quicker return ?
 
+_ ? (add) flag to restrict pistons to affecting one region only ?
+
 - !(add) Better commands / effect of commands (both for structure and for pistons, panic = disable all, wgpfix deny pistons)
 
 
