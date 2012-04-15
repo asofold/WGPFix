@@ -130,8 +130,14 @@ public abstract class AbstractNewConfig extends AbstractConfig {
 	@Override
 	public Boolean getBoolean(String path, Boolean defaultValue) {
 		if (!config.contains(path)) return defaultValue;
-		Boolean res = super.getBoolean(path, null);
-		if ( res == null ){
+		String val = config.getString(path, null);
+		if (val != null){
+			if (val.equalsIgnoreCase("true")) return true;
+			else if (val.equalsIgnoreCase("false")) return false;
+			else return defaultValue;
+		}
+		Boolean res = defaultValue; 
+		if ( val == null ){
 			if ( defaultValue == null) defaultValue = false;
 			res = config.getBoolean(path, defaultValue);
 		}

@@ -1,6 +1,7 @@
 package asofold.fix.wgp.compatlayer;
 
 import java.io.File;
+import java.util.Map;
 
 
 @SuppressWarnings("deprecation")
@@ -15,5 +16,11 @@ public class OldConfig extends AbstractOldConfig{
 	@Override
 	public boolean save(){
 		return config.save();
+	}
+	@Override
+	public Map<String, Object> getValuesDeep() {
+		Map<String, Object> all = config.getAll();
+		// TODO: maybe check for sub nodes ? ... CHECK IT!
+		return all;
 	}
 }

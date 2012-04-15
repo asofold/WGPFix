@@ -1,6 +1,7 @@
 package asofold.fix.wgp.compatlayer;
 
 import java.io.File;
+import java.util.Map;
 
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,6 +36,12 @@ public class NewConfig extends AbstractNewConfig{
 		} catch (Throwable t){
 			return false;
 		}
+	}
+
+
+	@Override
+	public Map<String, Object> getValuesDeep() {
+		return config.getValues(true);
 	}
 	
 	

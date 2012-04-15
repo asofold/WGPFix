@@ -2,11 +2,9 @@ package asofold.fix.wgp.compatlayer;
 
 import java.io.File;
 
-import com.avaje.ebean.EbeanServer;
-
 public class CompatConfigFactory {
 	
-	public static final String version = "0.1.1";
+	public static final String version = "0.2.0";
 	
 	/**
 	 * Attempt to get a working file configuration.
@@ -37,19 +35,19 @@ public class CompatConfigFactory {
 		return new NewConfig(file);
 	}
 	
-	/**
-	 * Get a ebeans based database config (!).
-	 * @param file
-	 * @return
-	 */
-	public static final CompatConfig getDBConfig(EbeanServer server, String dbKey){
-		try{
-			return new SnakeDBConfig(server, dbKey);
-		} catch (Throwable t){
-			
-		}
-		return new DBConfig(server, dbKey);
-	}
+//	/**
+//	 * Get a ebeans based database config (!).
+//	 * @param file
+//	 * @return
+//	 */
+//	public static final CompatConfig getDBConfig(EbeanServer server, String dbKey){
+//		try{
+//			return new SnakeDBConfig(server, dbKey);
+//		} catch (Throwable t){
+//			
+//		}
+//		return new DBConfig(server, dbKey);
+//	}
 	
 	
 	// TODO: add setup helpers (!)

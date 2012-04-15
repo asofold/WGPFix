@@ -2,6 +2,7 @@ package asofold.fix.wgp.compatlayer;
 
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * CONVENTIONS: 
@@ -54,5 +55,11 @@ public interface CompatConfig {
 	public void removeProperty(String path);
 	
 	public List<Double> getDoubleList(String path , List<Double> defaultValue);
+	
+	/**
+	 * Equivalent to new config: values(true)
+	 * @return
+	 */
+	public Map<String, Object> getValuesDeep();
 	
 }
