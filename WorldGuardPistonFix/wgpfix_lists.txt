@@ -24,6 +24,9 @@ _ ? (add) flag to restrict pistons to affecting one region only ?
 CHANGELOG
 -------------------------------------
 
+(1.4.2)
+- (update) config: compatlayer
+
 (1.4.1)
 - (add) Print out the stack trace for exceptions on reloading.
 - (bugfix) in setWG: NullPointerException if WorldGuard is not present.
