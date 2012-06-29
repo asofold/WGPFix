@@ -1,6 +1,6 @@
 name: WGPFix
 main: asofold.fix.wgp.WGPFix
-version: 1.4.1
+version: 1.4.2
 softdepend:
 - WorldGuard
 - WorldEdit
