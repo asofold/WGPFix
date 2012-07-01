@@ -24,6 +24,9 @@ _ ? (add) flag to restrict pistons to affecting one region only ?
 CHANGELOG
 -------------------------------------
 
+(2.0.0)
+- (CHANGE) Packet structure.
+
 (1.4.2)
 - (update) config: compatlayer
 

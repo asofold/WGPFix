@@ -1,16 +1,17 @@
-package asofold.fix.wgp;
+package me.asofold.bukkit.fix.wgp;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import me.asofold.bukkit.fix.wgp.compatlayer.CompatConfig;
+import me.asofold.bukkit.fix.wgp.compatlayer.CompatConfigFactory;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import asofold.fix.wgp.compatlayer.CompatConfig;
-import asofold.fix.wgp.compatlayer.CompatConfigFactory;
 
 /**
  * 

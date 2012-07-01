@@ -1,4 +1,4 @@
-package asofold.fix.wgp;
+package me.asofold.bukkit.fix.wgp;
 
 import java.util.HashSet;
 import java.util.LinkedList;

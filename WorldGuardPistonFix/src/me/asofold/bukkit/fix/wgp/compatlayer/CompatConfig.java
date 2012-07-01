@@ -1,4 +1,4 @@
-package asofold.fix.wgp.compatlayer;
+package me.asofold.bukkit.fix.wgp.compatlayer;
 
 
 import java.util.List;
