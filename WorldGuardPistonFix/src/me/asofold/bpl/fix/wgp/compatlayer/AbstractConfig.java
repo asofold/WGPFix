@@ -1,4 +1,4 @@
-package me.asofold.bukkit.fix.wgp.compatlayer;
+package me.asofold.bpl.fix.wgp.compatlayer;
 
 import java.util.HashSet;
 import java.util.LinkedList;

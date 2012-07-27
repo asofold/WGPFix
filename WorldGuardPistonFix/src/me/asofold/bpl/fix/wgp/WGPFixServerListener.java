@@ -1,4 +1,4 @@
-package me.asofold.bukkit.fix.wgp;
+package me.asofold.bpl.fix.wgp;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

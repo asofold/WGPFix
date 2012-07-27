@@ -1,4 +1,4 @@
-package me.asofold.bukkit.fix.wgp;
+package me.asofold.bpl.fix.wgp;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
