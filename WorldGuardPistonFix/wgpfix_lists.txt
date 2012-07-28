@@ -6,6 +6,7 @@ PLANNING
 ------------------------
 
 - ?(add) List of regions to exclude from checks (treat as not there)
+- ?(add) Treatment of regions that have the passthrough (or build?) flag set.
 
 *** OPT
 - ? advanced opt: user sets without sets (very fast thing ?)
