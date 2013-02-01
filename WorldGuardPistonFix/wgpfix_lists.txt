@@ -21,6 +21,9 @@ _ ? (add) flag to restrict pistons to affecting one region only ?
 
 - !(add) Better commands / effect of commands (both for structure and for pistons, panic = disable all, wgpfix deny pistons)
 
+? evaluate: passthrough flag, parental relations, priorities
+
+check out PistonMoveReaction for more generic stuff ?
 
 CHANGELOG
 -------------------------------------
