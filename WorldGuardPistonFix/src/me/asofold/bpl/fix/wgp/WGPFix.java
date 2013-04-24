@@ -109,6 +109,7 @@ public class WGPFix extends JavaPlugin {
 				config.setProperty("panic", false);
 				config.setProperty("max-blocks", defaultMaxBlocks);
 				config.setProperty("monitor-structure-growth", false);
+				config.setProperty("monitor-from-to", false);
 				config.save(); // ignore result
 			} else{
 				config.load();
@@ -121,6 +122,7 @@ public class WGPFix extends JavaPlugin {
 			setMaxBlocks(config.getInt("max-blocks", defaultMaxBlocks));
 			setDeniedBlocks(config.getIntList("deny-blocks.sticky", null), config.getIntList("deny-blocks.all", null));
 			setMonitorStructureGrowth(config.getBoolean("monitor-structure-growth", false));
+			setMonitorFromTo(config.getBoolean("monitor-from-to", false));
 			blockListener.setWG();
 			return true;
 		} catch (Throwable t){
@@ -139,6 +141,15 @@ public class WGPFix extends JavaPlugin {
 	 */
 	public void setMonitorStructureGrowth(boolean monitor) {
 		blockListener.monitorStructureGrowth = monitor;
+	}
+	
+	/**
+	 * API
+	 * Set to true to monitor fluid spreading.
+	 * @param monitor
+	 */
+	public void setMonitorFromTo(boolean monitor){
+		blockListener.monitorFromTo = monitor;
 	}
 
 	/**

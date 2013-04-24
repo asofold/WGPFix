@@ -1,5 +1,6 @@
 package me.asofold.bpl.fix.wgp;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
@@ -40,6 +42,7 @@ public class WGPFixCoreListener implements Listener {
 	boolean preventNonStickyRetract = false;
 	boolean popDisallowed = false;
 	boolean monitorStructureGrowth = false;
+	boolean monitorFromTo = false;
 	
 	
 	boolean panic = false;
@@ -123,14 +126,13 @@ public class WGPFixCoreListener implements Listener {
 		} 
 	}
 
-	@EventHandler(priority=EventPriority.LOW)
+	@EventHandler(priority=EventPriority.LOW, ignoreCancelled = true)
 	final void onBlockPistonRetract(final BlockPistonRetractEvent event) {
-		if ( panic){
+		if (panic){
 			event.setCancelled(true);
 			return;
 		}
-		if ( !monitorPistons) return;
-		if ( event.isCancelled()) return;
+		if (!monitorPistons) return;
 		final boolean isSticky = event.isSticky() ;
 		if (!(isSticky|| preventNonStickyRetract)) return;
 		final BlockFace dir = event.getDirection();
@@ -161,9 +163,12 @@ public class WGPFixCoreListener implements Listener {
 		} 
 	}
 	
-	@EventHandler(priority=EventPriority.LOW)
+	@EventHandler(priority=EventPriority.LOW, ignoreCancelled = true)
 	final void onStructureGrow(StructureGrowEvent event){
-		if ( event.isCancelled()) return;
+		if (panic){
+			event.setCancelled(true);
+			return;
+		}
 		if (!monitorStructureGrowth) return;
 		final List<Location> affected = new LinkedList<Location>();
 		for ( BlockState state : event.getBlocks()){
@@ -177,6 +182,27 @@ public class WGPFixCoreListener implements Listener {
 			if ( affected.isEmpty()) return;
 		}
 		if (!sameOwners(loc, affected)) event.setCancelled(true);
+	}
+	
+	@EventHandler(priority=EventPriority.LOW, ignoreCancelled = true)
+	final void onBlockFromTo(final BlockFromToEvent event){
+		if (panic){
+			event.setCancelled(true);
+			return;
+		}
+		if (!monitorFromTo) return;
+		final Block from = event.getBlock();
+		final Block to = event.getToBlock();
+		final List<Location> affected = new ArrayList<Location>(1);
+		if (to != null){
+			affected.add(to.getLocation());
+		}
+		else{
+			affected.add(from.getRelative(event.getFace()).getLocation());
+		}
+		if (!sameOwners(from.getLocation(), affected)){
+			event.setCancelled(true);
+		}
 	}
 	
 
@@ -214,6 +240,9 @@ public class WGPFixCoreListener implements Listener {
 		final int size = mustMatch.size();
 		final boolean hasCheckers = !WGPFix.regionCheckers.isEmpty();
 		List<ApplicableRegionSet> applicableSets  = null;
+		
+		// TODO: could use some caching and also fast heuristic without checking owners if same regions. problem: checkers
+		
 		if ( hasCheckers){ 
 			applicableSets = new LinkedList<ApplicableRegionSet>();
 			if (isRegion) applicableSets.add(set);
