@@ -7,6 +7,7 @@ import java.util.List;
 
 import me.asofold.bpl.fix.wgp.compatlayer.CompatConfig;
 import me.asofold.bpl.fix.wgp.compatlayer.CompatConfigFactory;
+import me.asofold.bpl.fix.wgp.compatlayer.ConfigUtil;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
@@ -91,6 +92,22 @@ public class WGPFix extends JavaPlugin {
 		this.blockListener.popDisallowed = pop;
 	}
 	
+	public CompatConfig getDefaultConfig(){
+		CompatConfig config = CompatConfigFactory.getConfig(null);
+		config.setProperty("monitor-pistons", true);
+		config.setProperty("prevent-nonsticky-retract", false);
+		config.setProperty("set-worldguard-interval", 4000);
+		config.setProperty("pop-disallowed", false);
+		config.setProperty("deny-blocks.sticky", new LinkedList<Integer>());
+		config.setProperty("deny-blocks.all", new LinkedList<Integer>());
+		config.setProperty("panic", false);
+		config.setProperty("max-blocks", defaultMaxBlocks);
+		config.setProperty("monitor-structure-growth", false);
+		config.setProperty("monitor-from-to", false);
+		config.save(); // ignore result
+		return config;
+	}
+	
 	/**
 	 * (API)
 	 * Load and apply settings from wgpfx.yml !
@@ -99,20 +116,9 @@ public class WGPFix extends JavaPlugin {
 		File file = new File( getDataFolder(), "wgpfix.yml");
 		try{
 			CompatConfig config = CompatConfigFactory.getConfig(file);
-			if (!file.exists()){
-				config.setProperty("monitor-pistons", true);
-				config.setProperty("prevent-nonsticky-retract", false);
-				config.setProperty("set-worldguard-interval", 4000);
-				config.setProperty("pop-disallowed", false);
-				config.setProperty("deny-blocks.sticky", new LinkedList<Integer>());
-				config.setProperty("deny-blocks.all", new LinkedList<Integer>());
-				config.setProperty("panic", false);
-				config.setProperty("max-blocks", defaultMaxBlocks);
-				config.setProperty("monitor-structure-growth", false);
-				config.setProperty("monitor-from-to", false);
-				config.save(); // ignore result
-			} else{
-				config.load();
+			config.load();
+			if (ConfigUtil.forceDefaults(getDefaultConfig(), config)){
+				config.save();
 			}
 			setPanic(config.getBoolean("panic", false));
 			setMonitorPistons(config.getBoolean("monitor-pistons", true));
