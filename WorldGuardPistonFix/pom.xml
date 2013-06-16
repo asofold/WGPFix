@@ -1,0 +1,69 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>me.asofold.bpl</groupId>
+  <artifactId>WorldGuardPistonFix</artifactId>
+  <version>2.2.0-DEV</version>
+  <name>WorldGuardPistonFix</name>
+  
+  <repositories>
+    <repository>
+		<id>bukkit</id>
+		<name>Bukkit</name>
+		<url>http://repo.bukkit.org/content/groups/public/</url>
+    </repository>
+  
+    <repository>
+		<id>sk89q</id>
+		<name>sk89q</name>
+		<url>http://maven.sk89q.com/repo/</url>
+    </repository>
+  </repositories>
+  
+  <packaging>jar</packaging>
+  
+  <build>
+    <defaultGoal>clean package</defaultGoal>
+    <finalName>WGPFix</finalName>
+    <resources>
+      <!-- plugin.yml here to fill in the correct content. -->
+      <resource>
+        <targetPath>.</targetPath>
+        <filtering>true</filtering>
+        <directory>.</directory>
+        <includes>
+          <include>plugin.yml</include>
+        </includes>
+      </resource>
+    </resources>
+    <sourceDirectory>src</sourceDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.0</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <url>http://dev.bukkit.org/bukkit-mods/wgpfix-worldguardpistonfix/</url>
+  <description>Monitors pistons, structure growth, fluid spread and other. Prevent cross-region abuse, checking members+owners. Control piston range, movable blocks, prevent pistons destroying certain blocks like crops.</description>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.bukkit</groupId>
+  		<artifactId>bukkit</artifactId>
+  		<version>1.4.7-R1.0</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.sk89q</groupId>
+  		<artifactId>worldguard</artifactId>
+  		<version>5.7.6-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.sk89q</groupId>
+  		<artifactId>worldedit</artifactId>
+  		<version>5.5.7-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
+</project>
