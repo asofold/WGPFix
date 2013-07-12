@@ -104,7 +104,6 @@ public class WGPFix extends JavaPlugin {
 		config.setProperty("max-blocks", defaultMaxBlocks);
 		config.setProperty("monitor-structure-growth", false);
 		config.setProperty("monitor-from-to", false);
-		config.save(); // ignore result
 		return config;
 	}
 	
