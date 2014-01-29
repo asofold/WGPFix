@@ -16,11 +16,14 @@ import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Directional;
+import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.Plugin;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
@@ -190,7 +193,9 @@ public class WGPFixCoreListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-		if (!monitorFromTo) return;
+		if (!monitorFromTo) {
+			return;
+		}
 		final Block from = event.getBlock();
 		final Block to = event.getToBlock();
 		final List<Location> affected = new ArrayList<Location>(1);
@@ -201,6 +206,51 @@ public class WGPFixCoreListener implements Listener {
 			affected.add(from.getRelative(event.getFace()).getLocation());
 		}
 		if (!sameOwners(from.getLocation(), affected)){
+			event.setCancelled(true);
+		}
+	}
+	
+	// TODO dropper / dispenser ...
+	@EventHandler(priority=EventPriority.LOW, ignoreCancelled = true)
+	final void onBlockDispense(final BlockDispenseEvent event){
+		final Block block = event.getBlock();
+		final ItemStack stack = event.getItem();
+		if (stack == null || block == null) {
+			return;
+		}
+//		final Material mat = stack.getType();
+//		switch (mat) {
+//		case LAVA:
+//		case LAVA_BUCKET:
+//		case STATIONARY_LAVA:
+//		case FLINT_AND_STEEL:
+//		case FIRE:
+//		case FIREWORK_CHARGE:
+//		case WATER:
+//		case WATER_BUCKET:
+//		case STATIONARY_WATER:
+//		// TODO: More cases !?
+//		}
+		// We prevent all cross-region dispensing for simplicity.
+		final MaterialData data = block.getState().getData();
+		if (!(data instanceof Directional)) {
+			// We can't tell ...
+			// TODO: Tell from velocity ? [check if it fires at all]
+			return;
+		}
+		if (panic) {
+			event.setCancelled(true);
+			return;
+		}
+		// TODO: Make configurable extra?
+		if (!monitorFromTo) {
+			return;
+		}
+		// TODO: Use stored instances of ArrayList and Locations (at the cost of noting so in the API).
+		final Block to = block.getRelative(((Directional) data).getFacing());
+		final List<Location> affected = new ArrayList<Location>(1);
+		affected.add(to.getLocation());
+		if (!sameOwners(block.getLocation(), affected)){
 			event.setCancelled(true);
 		}
 	}
