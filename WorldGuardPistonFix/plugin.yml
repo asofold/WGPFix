@@ -1,6 +1,6 @@
 name: WGPFix
 main: me.asofold.bpl.fix.wgp.WGPFix
-version: ${project.version}-b${BUILD_NUMBER}
+version: ${project.version}
 softdepend:
 - WorldGuard
 - WorldEdit
